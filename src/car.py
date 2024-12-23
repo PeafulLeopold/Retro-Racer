@@ -1,7 +1,7 @@
 import pygame
 
 class Car:
-    def __init__(self, x, y, car_img, img_path, speed):
+    def __init__(self, x, y, car_img, speed):
         self.x = x
         self.y = y
         self.scrolling_speed = speed
@@ -22,6 +22,9 @@ class Car:
     
     def draw(self, screen):
         screen.blit(self.car_image, self.car_rect)
+    
+
+
     
 
 
