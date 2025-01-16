@@ -1,6 +1,6 @@
 """
 
-<div align="center"># Техническое задание: RetroRacer</div>
+# Техническое задание: RetroRacer
 
 ## 1. Хранение данных
 
