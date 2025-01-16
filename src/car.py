@@ -5,7 +5,7 @@ class Car:
         self.x = x
         self.y = y
         self.scrolling_speed = speed
-        self.car_image = pygame.transform.scale(car_img, (190, 200))
+        self.car_image = pygame.transform.scale(car_img, (210, 200))
         self.car_rect = self.car_image.get_rect(center=(self.x, self.y))
     
     def update(self, keys):

@@ -29,8 +29,8 @@ def draw_text(text, x, y, font, color):
 def main_menu():
     while True:
         screen.fill(BLACK)
-        draw_text("Retro-Racer", WIDTH // 2, 50, game_name_font, WHITE)
-        draw_text("Главное меню", WIDTH // 2, 150, main_font, WHITE)
+        draw_text("Retro-Racer", WIDTH // 2, 85, game_name_font, WHITE)
+        # draw_text("Главное меню", WIDTH // 2, 150, main_font, WHITE)
         play_button = draw_button("Играть", 175, 200, 450, 75)
         garage_button = draw_button("Гараж", 175, 325, 450, 75)
         settings_button = draw_button("Настройки", 175, 450, 450, 75)

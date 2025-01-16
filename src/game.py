@@ -4,16 +4,15 @@ from road import Road
 from car import Car
 
 class Game:
-
     def __init__(self):
         self.speed = 1
         self.WIDTH, self.HEIGHT = 1100, 800
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         
-        car_path = "data/images/car.jpg"
+        car_path = "data/images/car.png"
         road_path = "data/images/road.png"
 
-        self.road_img = pygame.image.load(road_path)
+        self.road_img = pygame.image.load(road_path).convert_alpha()
         self.car_img = pygame.image.load(car_path)
 
         pygame.display.set_caption("Retro Racer")
@@ -21,7 +20,7 @@ class Game:
 
     def game_loop(self):
         running = True
-        car = Car(self.WIDTH // 2, self.HEIGHT // 2, self.car_img, self.speed)
+        car = Car(self.WIDTH // 2, self.HEIGHT // 2 + 150, self.car_img, self.speed)
         road = Road(self.HEIGHT, self.WIDTH, self.road_img, self.speed)
 
         while running:
