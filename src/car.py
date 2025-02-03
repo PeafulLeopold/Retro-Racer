@@ -14,9 +14,9 @@ class Car:
         if keys[pygame.K_DOWN]:
             self.y += self.scrolling_speed
         if keys[pygame.K_LEFT]:
-            self.x -= self.scrolling_speed
+            self.x -= self.scrolling_speed * 1.5
         if keys[pygame.K_RIGHT]:
-            self.x += self.scrolling_speed
+            self.x += self.scrolling_speed * 1.5
         
         self.car_rect.center = (self.x, self.y)
     

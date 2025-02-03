@@ -2,6 +2,7 @@ import pygame
 import sys
 from colors import BLACK, GREEN, WHITE
 from game import Game
+from login import Login
 
 pygame.init()
 
@@ -29,12 +30,13 @@ def draw_text(text, x, y, font, color):
 def main_menu():
     while True:
         screen.fill(BLACK)
-        draw_text("Retro-Racer", WIDTH // 2, 85, game_name_font, WHITE)
+        login_button = draw_button("Войти", 640, 20, 150, 75)
+        draw_text("Retro-Racer", WIDTH // 2, 185, game_name_font, WHITE)
         # draw_text("Главное меню", WIDTH // 2, 150, main_font, WHITE)
-        play_button = draw_button("Играть", 175, 200, 450, 75)
-        garage_button = draw_button("Гараж", 175, 325, 450, 75)
-        settings_button = draw_button("Настройки", 175, 450, 450, 75)
-        leaders_button = draw_button("Таблица лидеров", 175, 575, 450, 75)
+        play_button = draw_button("Играть", 175, 300, 450, 75)
+        garage_button = draw_button("Гараж", 175, 425, 450, 75)
+        settings_button = draw_button("Настройки", 175, 550, 450, 75)
+        leaders_button = draw_button("Таблица лидеров", 175, 675, 450, 75)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,6 +47,9 @@ def main_menu():
                 if event.button == 1:
                     if play_button.collidepoint(event.pos):
                         return "play"
+                    if login_button.collidepoint(event.pos):
+                        return 'login'
+
 
         pygame.display.flip()
 
@@ -54,3 +59,8 @@ if __name__ == "__main__":
         if action == "play":
             game = Game()
             game.game_loop()
+        if action == 'login':
+            login_window = Login()
+            login_window.login()
+        if action == 'register':
+            register_window = ...
