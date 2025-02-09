@@ -1,5 +1,6 @@
 import pygame
 import sys
+
 from colors import BLACK, WHITE
 from game import Game
 from login import Login
