@@ -1,5 +1,6 @@
 import pygame
 import sys
+import sqlite3
 
 from colors import GREEN
 
@@ -214,9 +215,26 @@ class Registration:
             self.screen.blit(error_surface, error_rect)
         
         elif self.success_message:
-            success_surface = self.font.render(self.success_message, True, GREEN)
+            self.success_message = ''
+
+            success_surface = self.font.render("Регистрация прошла успешно!", True, GREEN)
             success_rect = success_surface.get_rect(center=(self.WIDTH // 2 + 10, 610))
             self.screen.blit(success_surface, success_rect)
+
+            conn = sqlite3.connect('db/project_database.db')
+            cursor = conn.cursor()
+
+            cursor.execute('''
+                           INSERT INTO Users (username, password)
+                           VALUES (?, ?)
+                           ''', (self.name_text, self.psw_text))
+
+            conn.commit()
+            conn.close()
+            
+
+            # Для себя
+            print("Пользователь успешно добавлен!")
 
         pygame.display.flip()
 
@@ -226,9 +244,5 @@ class Registration:
             self.update_cursors()
             self.draw()
             self.clock.tick(60)
-
-if __name__ == "__main__":
-    registration = Registration()
-    registration.main_loop()
 
 
