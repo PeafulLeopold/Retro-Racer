@@ -5,6 +5,7 @@ from colors import BLACK, WHITE
 from game import Game
 from login import Login
 from register import Registration
+from garage import Shop
 
 pygame.init()
 
@@ -51,6 +52,8 @@ def main_menu():
                         return "play"
                     if login_button.collidepoint(event.pos):
                         return 'login'
+                    if garage_button.collidepoint(event.pos):
+                        return 'garage'
 
         pygame.display.flip()
 
@@ -67,5 +70,8 @@ if __name__ == "__main__":
             if login_loop == 'register':
                 registration_window = Registration()
                 registration_window.main_loop()
+        if action == 'garage':
+            garage = Shop()
+            garage.main()
 
 
