@@ -5,7 +5,7 @@ from colors import BLACK, WHITE
 from game import Game
 from login import Login
 from register import Registration
-from garage import Shop
+from garage import Garage
 
 pygame.init()
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
                 registration_window = Registration()
                 registration_window.main_loop()
         if action == 'garage':
-            garage = Shop()
-            garage.main()
+            garage = Garage()
+            garage.run()
 
 
