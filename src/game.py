@@ -8,7 +8,7 @@ from forest import Forest
 
 
 class Game:
-    def __init__(self, game_state):  # Принимаем game_state
+    def __init__(self, game_state, settings):  # Принимаем game_state и settings
         pygame.init()
         self.WIDTH, self.HEIGHT = 1100, 800
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
@@ -20,11 +20,11 @@ class Game:
         self.forest_img = pygame.image.load("data/images/forest.jpg").convert()
 
         # Загрузка звуков
-        self.engine_sound = pygame.mixer.music.load("data/sounds/car_sound.mp3")  # Звук двигателя
-        self.crash_sound = pygame.mixer.music.load("data/sounds/car_crash.mp3")    # Звук столкновения
+        pygame.mixer.music.load("data/sounds/car_sound.mp3")  # Звук двигателя (музыка)
+        self.crash_sound = pygame.mixer.Sound("data/sounds/car_crash.mp3")  # Звук столкновения
 
         # Инициализация объектов
-        self.player = Car(self.WIDTH//2, self.HEIGHT//2 + 150, self.car_img, 5)
+        self.player = Car(self.WIDTH//2, self.HEIGHT//2 + 150, self.car_img, 5, settings.control_scheme)  # Передаем схему управления
         self.road = Road(self.HEIGHT, self.WIDTH, self.road_img, 3)
         self.forest = Forest(self.HEIGHT, self.forest_img, 1)
         self.holes = []
@@ -44,8 +44,8 @@ class Game:
         self.score_timer = pygame.time.get_ticks()
         self.start_time = pygame.time.get_ticks()  # Время начала игры
 
-        # Воспроизведение звука двигателя
-        self.engine_sound.play(-1)  # -1 означает бесконечное воспроизведение
+        # Воспроизведение звука двигателя (музыки)
+        pygame.mixer.music.play(-1)  # -1 означает бесконечное воспроизведение
 
     def can_spawn_hole(self, new_hole):
         """Проверка условий для спавна новой дыры"""
@@ -157,8 +157,8 @@ class Game:
             pygame.display.flip()
             clock.tick(60)
 
-        # Остановка звука двигателя при завершении игры
-        self.engine_sound.stop()
+        # Остановка музыки при завершении игры
+        pygame.mixer.music.stop()
         pygame.quit()
 
     def draw_text(self, text, x, y, color, size):

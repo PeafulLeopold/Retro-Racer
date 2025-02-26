@@ -75,13 +75,13 @@ class GameState:
 
 if __name__ == "__main__":
     game_state = GameState()  # Создаем объект GameState
+    settings = Settings()  # Создаем объект Settings
 
     while True:
         action = main_menu(game_state)  # Передаем game_state в главное меню
         if action == "play":
             pygame.mixer.music.stop()  # Останавливаем музыку перед запуском игры
-            game = Game(game_state)  # Передаем game_state в игру
-            # В основном коде игры
+            game = Game(game_state, settings)  # Передаем game_state и settings в игру
             game.game_loop()  # Запускаем игровой цикл
             pygame.mixer.music.play(-1)  # Возобновляем музыку после завершения игры
         if action == 'login':
@@ -95,9 +95,7 @@ if __name__ == "__main__":
             garage = Garage(game_state)  # Передаем game_state в гараж
             garage.run()
         if action == 'settings':
-            sets = Settings()
-            game.player.control_scheme = sets.control_scheme
-            sets.run()
+            settings.run()  # Запускаем меню настроек
         if action == 'leaders':
             leads = Leaderboard()
             leads.run()
