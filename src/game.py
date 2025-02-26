@@ -6,8 +6,9 @@ from hole import Hole
 from road import Road
 from forest import Forest
 
+
 class Game:
-    def __init__(self):
+    def __init__(self, game_state):  # Принимаем game_state
         pygame.init()
         self.WIDTH, self.HEIGHT = 1100, 800
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
@@ -17,6 +18,10 @@ class Game:
         self.car_img = pygame.image.load("data/images/car.png").convert_alpha()
         self.road_img = pygame.image.load("data/images/road.png").convert_alpha()
         self.forest_img = pygame.image.load("data/images/forest.jpg").convert()
+
+        # Загрузка звуков
+        self.engine_sound = pygame.mixer.music.load("data/sounds/car_sound.mp3")  # Звук двигателя
+        self.crash_sound = pygame.mixer.music.load("data/sounds/car_crash.mp3")    # Звук столкновения
 
         # Инициализация объектов
         self.player = Car(self.WIDTH//2, self.HEIGHT//2 + 150, self.car_img, 5)
@@ -35,7 +40,12 @@ class Game:
         self.lives = 3
         self.score = 0
         self.distance = 0
+        self.game_state = game_state  # Сохраняем game_state
         self.score_timer = pygame.time.get_ticks()
+        self.start_time = pygame.time.get_ticks()  # Время начала игры
+
+        # Воспроизведение звука двигателя
+        self.engine_sound.play(-1)  # -1 означает бесконечное воспроизведение
 
     def can_spawn_hole(self, new_hole):
         """Проверка условий для спавна новой дыры"""
@@ -76,6 +86,12 @@ class Game:
         if now - self.score_timer > 1000:
             self.score += 10
             self.distance += self.player.speed
+
+            # Начисление денег по 1, начиная с 3 секунды
+            elapsed_time = (now - self.start_time) / 1000  # Время в секундах
+            if elapsed_time >= 3:  # Начинаем начислять деньги после 3 секунд
+                self.game_state.money += 1  # Начисляем 1 денежку
+
             self.score_timer = now
 
     def check_collision(self):
@@ -87,6 +103,7 @@ class Game:
                 self.lives -= 1
                 self.occupied_lanes.discard(hole.lane)
                 self.holes.remove(hole)
+                self.crash_sound.play()  # Воспроизведение звука столкновения
                 return True
         return False
 
@@ -102,6 +119,8 @@ class Game:
 
             # Обновление состояния
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_ESCAPE]:
+                running = False  # Завершаем игровой цикл
             self.player.update(keys)
             self.road.update()
             self.forest.update()
@@ -133,10 +152,13 @@ class Game:
             self.draw_text(f"Жизни: {self.lives}", 30, 30, RED, 36)
             self.draw_text(f"Очки: {self.score}", 30, 70, GREEN, 36)
             self.draw_text(f"Дистанция: {self.distance}m", 30, 110, GREEN, 36)
+            self.draw_text(f"Деньги: {self.game_state.money}$", 30, 150, GREEN, 36)  # Добавлено: отображение денег
 
             pygame.display.flip()
             clock.tick(60)
 
+        # Остановка звука двигателя при завершении игры
+        self.engine_sound.stop()
         pygame.quit()
 
     def draw_text(self, text, x, y, color, size):
