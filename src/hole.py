@@ -1,19 +1,26 @@
 import pygame
+
+
 class Hole:
-    def __init__(self, screen_height, hole_img, speed):
-        self.hole_image = pygame.transform.scale(hole_img, (150, 150))
-        self.screen_height = screen_height
-        self.x_pos = 290
-        self.y_pos = 0
-        self.scrolling_speed = speed
-        self.hole_rect = self.hole_image.get_rect()
+    LANE_POSITIONS = [350, 550, 750]  # Позиции для 0-левая, 1-центр, 2-правая
     
-    def update(self):
-        self.y_pos += self.scrolling_speed
+    def __init__(self, screen_height, hole_img_path, speed, lane):
+        # Загрузка и настройка изображения
+        self.image = pygame.image.load(hole_img_path).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (120, 120))
+        self.mask = pygame.mask.from_surface(self.image)
         
-        if self.y_pos >= self.screen_height:
-            self.y_pos = 0
-    
+        # Параметры движения
+        self.speed = speed
+        self.HEIGHT = screen_height
+        self.lane = lane
+        self.x = self.LANE_POSITIONS[lane]
+        self.y = -200
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+
+    def update(self):
+        self.y += self.speed
+        self.rect.centery = self.y
+
     def draw(self, screen):
-        screen.blit(self.hole_image, (self.x_pos, self.y_pos - self.screen_height))
-        screen.blit(self.hole_image, (self.x_pos, self.y_pos))
+        screen.blit(self.image, self.rect)

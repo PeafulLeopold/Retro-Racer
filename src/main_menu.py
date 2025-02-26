@@ -6,6 +6,8 @@ from game import Game
 from login import Login
 from register import Registration
 from garage import Garage
+from settings import Settings
+from leaderboard import Leaderboard
 
 pygame.init()
 
@@ -52,8 +54,10 @@ def main_menu():
                         return "play"
                     if login_button.collidepoint(event.pos):
                         return 'login'
-                    if garage_button.collidepoint(event.pos):
-                        return 'garage'
+                    if settings_button.collidepoint(event.pos):
+                        return 'settings'
+                    if leaders_button.collidepoint(event.pos):
+                        return 'leaders'
 
         pygame.display.flip()
 
@@ -73,5 +77,9 @@ if __name__ == "__main__":
         if action == 'garage':
             garage = Garage()
             garage.run()
-
-
+        if action == 'settings':
+            sets = Settings()
+            sets.run()
+        if action == 'leaders':
+            leads = Leaderboard()
+            leads.run()
