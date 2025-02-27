@@ -95,7 +95,7 @@ class Game:
         if now - self.last_spawn > self.spawn_cooldown:
             lane = random.choice([0, 1, 2])
             lane_center = get_lane_center(self.road.rect, lane)
-            new_hole = Hole(self.HEIGHT, "data/images/hole.jpg", 3, lane)
+            new_hole = Hole(self.HEIGHT, "data/images/hole.png", 3, lane)
             new_hole.rect.centerx = lane_center  # Центрируем яму по полосе
             # Масштабируем изображение ямы до (80x80)
             new_hole.image = pygame.transform.scale(new_hole.image, (80, 80))
@@ -110,7 +110,7 @@ class Game:
             bonus_type = "coin" if random.random() < 0.7 else "heart"
             lane = random.choice([0, 1, 2])
             lane_center = get_lane_center(self.road.rect, lane)
-            image_path = "data/images/coin.jpg" if bonus_type == "coin" else "data/images/heart.jpg"
+            image_path = "data/images/coin.png" if bonus_type == "coin" else "data/images/heart.png"
             bonus = Bonus(bonus_type, image_path, speed=3, lane_center=lane_center)
             self.bonuses.append(bonus)
             self.last_bonus_spawn = now
