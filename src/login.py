@@ -49,5 +49,5 @@ class Login:
                         if registration_button.collidepoint(event.pos):
                             return "register"
                         if login_button.collidepoint(event.pos):
-                            return "login"
+                            return "log_in"
             pygame.display.flip()
