@@ -5,6 +5,7 @@ from car import Car
 from hole import Hole
 from road import Road
 from forest import Forest
+from database import update_high_score  # Импортируем функцию обновления рекорда
 
 # Функция для вычисления центра полосы на дороге
 def get_lane_center(road_rect, lane):
@@ -94,7 +95,7 @@ class Game:
         if now - self.last_spawn > self.spawn_cooldown:
             lane = random.choice([0, 1, 2])
             lane_center = get_lane_center(self.road.rect, lane)
-            new_hole = Hole(self.HEIGHT, "data/images/hole.png", 3, lane)
+            new_hole = Hole(self.HEIGHT, "data/images/hole.jpg", 3, lane)
             new_hole.rect.centerx = lane_center  # Центрируем яму по полосе
             # Масштабируем изображение ямы до (80x80)
             new_hole.image = pygame.transform.scale(new_hole.image, (80, 80))
@@ -109,7 +110,7 @@ class Game:
             bonus_type = "coin" if random.random() < 0.7 else "heart"
             lane = random.choice([0, 1, 2])
             lane_center = get_lane_center(self.road.rect, lane)
-            image_path = "data/images/coin.png" if bonus_type == "coin" else "data/images/heart.png"
+            image_path = "data/images/coin.jpg" if bonus_type == "coin" else "data/images/heart.jpg"
             bonus = Bonus(bonus_type, image_path, speed=3, lane_center=lane_center)
             self.bonuses.append(bonus)
             self.last_bonus_spawn = now
@@ -218,6 +219,9 @@ class Game:
         pygame.mixer.stop()
         self.show_statistics()
 
-
     def show_statistics(self):
+        if self.game_state.user_id is not None:
+            update_high_score(self.game_state.user_id, self.score)
         self.game_state.money += self.earned_money
+        pygame.mixer.music.stop()
+        pygame.mixer.stop()

@@ -51,7 +51,8 @@ def init_db():
 def create_user(username, password):
     """
     Создает нового пользователя с балансом и рекордом, равными 0.
-    Возвращает id нового пользователя или None в случае ошибки (например, если имя уже существует).
+    Возвращает id нового пользователя или None в случае ошибки.
+    Изначально каждому пользователю присваивается дефолтная машина с изображением "data\\images\\car.png".
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -65,6 +66,29 @@ def create_user(username, password):
         conn.close()
         return None
     user_id = cursor.lastrowid
+
+    # Определяем путь до дефолтной машины
+    default_image_path = r"data\images\car.png"
+    # Проверяем, существует ли машина с таким изображением
+    cursor.execute('SELECT id FROM Cars WHERE image_path = ?', (default_image_path,))
+    result = cursor.fetchone()
+    if result is None:
+        # Если нет, создаем дефолтную машину с базовыми характеристиками
+        cursor.execute('''
+            INSERT INTO Cars (name, speed, acceleration, price, image_path)
+            VALUES (?, ?, ?, ?, ?)
+        ''', ("Default Car", 200, 4.0, 0, default_image_path))
+        conn.commit()
+        default_car_id = cursor.lastrowid
+    else:
+        default_car_id = result[0]
+    
+    # Привязываем дефолтную машину к новому пользователю
+    cursor.execute('''
+        INSERT INTO OwnedCars (user_id, car_id)
+        VALUES (?, ?)
+    ''', (user_id, default_car_id))
+    conn.commit()
     conn.close()
     return user_id
 
@@ -98,28 +122,50 @@ def update_balance(user_id, new_balance):
     conn.commit()
     conn.close()
 
-def update_high_score(user_id, new_high_score):
+def update_high_score(user_id, new_score):
     """
-    Обновляет рекорд пользователя.
+    Обновляет рекорд пользователя, если новый результат выше текущего.
+    Это позволяет корректно обновлять таблицу лидеров после заезда.
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute('''
-        UPDATE Users
-        SET high_score = ?
-        WHERE id = ?
-    ''', (new_high_score, user_id))
-    conn.commit()
+    # Получаем текущий рекорд пользователя
+    cursor.execute('SELECT high_score FROM Users WHERE id = ?', (user_id,))
+    current_high = cursor.fetchone()[0]
+    if new_score > current_high:
+        cursor.execute('''
+            UPDATE Users
+            SET high_score = ?
+            WHERE id = ?
+        ''', (new_score, user_id))
+        conn.commit()
     conn.close()
 
 def get_cars():
     """
     Возвращает список всех автомобилей.
+    Если таблица пуста, заполняет её начальными записями.
+    Каждая запись имеет формат:
+    (id, name, speed, acceleration, price, image_path)
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Cars')
     cars = cursor.fetchall()
+    if not cars:
+        # Добавляем начальные записи (убедитесь, что файлы изображений существуют по указанным путям)
+        default_cars = [
+            ("Speedster", 220, 3.5, 50, "assets/cars/speedster.png"),
+            ("Roadster", 240, 3.2, 60, "assets/cars/roadster.png"),
+            ("Thunder", 260, 3.0, 70, "assets/cars/thunder.png")
+        ]
+        cursor.executemany('''
+            INSERT INTO Cars (name, speed, acceleration, price, image_path)
+            VALUES (?, ?, ?, ?, ?)
+        ''', default_cars)
+        conn.commit()
+        cursor.execute('SELECT * FROM Cars')
+        cars = cursor.fetchall()
     conn.close()
     return cars
 
