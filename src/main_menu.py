@@ -90,7 +90,7 @@ def main_menu(game_state):
         leaders_button = draw_button("Таблица лидеров", WIDTH // 2, 540, 300, 60)
         # Вывод баланса только для авторизованных пользователей
         if game_state.user_id is not None:
-            draw_text(f"Баланс: {game_state.money}$", 150, 50, button_font, WHITE)
+            draw_text(f"Баланс: {game_state.money}$", 150, 40, button_font, WHITE)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -128,7 +128,14 @@ class GameState:
         self.selected_car = None
 
 if __name__ == "__main__":
-    
+    from settings import Settings
+    from log_in import Log_In
+    from register import Registration
+    from leaderboard import Leaderboard
+    from garage import Garage
+    from game import Game
+    from login import Login
+
     game_state = GameState()
     settings = Settings()
 

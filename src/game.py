@@ -5,7 +5,6 @@ from car import Car
 from hole import Hole
 from road import Road
 from forest import Forest
-from database import update_high_score, get_user
 
 # Функция для вычисления центра полосы на дороге
 def get_lane_center(road_rect, lane):
@@ -172,8 +171,11 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    break
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return
+                    if event.key == pygame.K_p:
+                        self.panel_visible = not self.panel_visible
 
             keys = pygame.key.get_pressed()
             self.player.update(keys)
@@ -187,7 +189,6 @@ class Game:
                 hole.update()
                 if hole.rect.y > self.HEIGHT + 200:
                     self.holes.remove(hole)
-            
             for bonus in self.bonuses[:]:
                 bonus.update()
                 if bonus.rect.y > self.HEIGHT + 50:
@@ -200,29 +201,23 @@ class Game:
             self.screen.fill(WHITE)
             self.forest.draw(self.screen)
             self.road.draw(self.screen)
-            
             for hole in self.holes:
                 hole.draw(self.screen)
-            
             for bonus in self.bonuses:
                 bonus.draw(self.screen)
             self.player.draw(self.screen)
 
-            if hasattr(self, 'panel_visible') and self.panel_visible:
+            if self.panel_visible:
                 self.draw_info_panel()
 
             pygame.display.flip()
             clock.tick(60)
 
-        if self.game_state.user_id is not None:
-            user = get_user(self.game_state.username)
-            current_high = user[4] if user else 0
-            if self.score > current_high:
-                update_high_score(self.game_state.user_id, self.score)
-
+        # После завершения игрового цикла останавливаем все звуки
         pygame.mixer.music.stop()
         pygame.mixer.stop()
         self.show_statistics()
+
 
     def show_statistics(self):
         self.game_state.money += self.earned_money
