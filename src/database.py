@@ -154,9 +154,7 @@ def get_cars():
     if not cars:
         # Добавляем начальные записи (убедитесь, что файлы изображений существуют по указанным путям)
         default_cars = [
-            ("Speedster", 220, 3.5, 50, "assets/cars/speedster.png"),
-            ("Roadster", 240, 3.2, 60, "assets/cars/roadster.png"),
-            ("Thunder", 260, 3.0, 70, "assets/cars/thunder.png")
+            ("Speedster", 220, 3.5, 50, "data/images/car.jpg"),
         ]
         cursor.executemany('''
             INSERT INTO Cars (name, speed, acceleration, price, image_path)
