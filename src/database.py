@@ -83,7 +83,6 @@ def create_user(username, password):
     else:
         default_car_id = result[0]
     
-    # Привязываем дефолтную машину к новому пользователю
     cursor.execute('''
         INSERT INTO OwnedCars (user_id, car_id)
         VALUES (?, ?)
