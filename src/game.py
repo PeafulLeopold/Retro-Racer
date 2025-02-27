@@ -5,20 +5,18 @@ from car import Car
 from hole import Hole
 from road import Road
 from forest import Forest
-from database import update_high_score  # Импортируем функцию обновления рекорда
+from database import update_high_score
 
-# Функция для вычисления центра полосы на дороге
 def get_lane_center(road_rect, lane):
     lane_width = road_rect.width / 3
     return road_rect.left + lane_width * (lane + 0.5)
 
-# Класс бонусов (монеты и сердца)
+# монеты и сердца
 class Bonus:
     def __init__(self, bonus_type, image_path, speed, lane_center):
         self.bonus_type = bonus_type  # "coin" или "heart"
         self.image = pygame.image.load(image_path).convert_alpha()
-        self.image.set_colorkey(WHITE)  # Убираем белый фон
-        # Масштабируем бонусы до (70x70)
+        self.image.set_colorkey(WHITE
         self.image = pygame.transform.scale(self.image, (70, 70))
         self.mask = pygame.mask.from_surface(self.image)
         self.speed = speed
@@ -33,7 +31,6 @@ class Bonus:
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-# Основной класс игры
 class Game:
     def __init__(self, game_state, settings):
         pygame.init()
@@ -41,7 +38,6 @@ class Game:
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption("Retro Racer")
 
-        # Загружаем изображение автомобиля (выбранное или дефолтное)
         if game_state.selected_car:
             raw_car_img = pygame.image.load(game_state.selected_car['image_path']).convert_alpha()
             car_speed = game_state.selected_car['speed']
@@ -52,11 +48,9 @@ class Game:
         self.road_img = pygame.image.load("data/images/road.png").convert_alpha()
         self.forest_img = pygame.image.load("data/images/forest.jpg").convert()
 
-        # Загрузка звуков
         pygame.mixer.music.load("data/sounds/car_sound.mp3")
         self.crash_sound = pygame.mixer.Sound("data/sounds/car_crash.mp3")
 
-        # Создаем игрока через класс Car и уменьшаем его размер до (220x210)
         self.player = Car(self.WIDTH // 2, self.HEIGHT // 2 + 150, raw_car_img, car_speed, settings.control_scheme)
         self.player.image = pygame.transform.scale(self.player.image, (220, 210))
         self.player.mask = pygame.mask.from_surface(self.player.image)
@@ -67,16 +61,13 @@ class Game:
         self.holes = []
         self.player.set_move_bounds(self.road.rect)
 
-        # Инициализация бонусов
         self.bonuses = []
         self.bonus_spawn_cooldown = random.randint(5000, 10000)
         self.last_bonus_spawn = pygame.time.get_ticks()
 
-        # Спавн ям (препятствий)
         self.spawn_cooldown = 1500
         self.last_spawn = pygame.time.get_ticks()
 
-        # Игровые параметры
         self.lives = 3
         self.score = 0
         self.distance = 0
@@ -85,7 +76,6 @@ class Game:
         self.start_time = pygame.time.get_ticks()
         self.earned_money = 0
 
-        # Параметр для отображения информационной панели
         self.panel_visible = True
 
         pygame.mixer.music.play(-1)
@@ -97,7 +87,6 @@ class Game:
             lane_center = get_lane_center(self.road.rect, lane)
             new_hole = Hole(self.HEIGHT, "data/images/hole.png", 3, lane)
             new_hole.rect.centerx = lane_center  # Центрируем яму по полосе
-            # Масштабируем изображение ямы до (80x80)
             new_hole.image = pygame.transform.scale(new_hole.image, (80, 80))
             new_hole.mask = pygame.mask.from_surface(new_hole.image)
             self.holes.append(new_hole)
@@ -151,8 +140,8 @@ class Game:
 
     def draw_info_panel(self):
         panel_rect = pygame.Rect(10, 10, 240, 120)
-        pygame.draw.rect(self.screen, BLACK, panel_rect)      # Черный фон
-        pygame.draw.rect(self.screen, GREEN, panel_rect, 2)     # Зеленая обводка
+        pygame.draw.rect(self.screen, BLACK, panel_rect)  
+        pygame.draw.rect(self.screen, GREEN, panel_rect, 2)     
 
         info_font = pygame.font.Font(None, 28)
         elapsed_time = (pygame.time.get_ticks() - self.start_time) / 1000
@@ -214,7 +203,6 @@ class Game:
             pygame.display.flip()
             clock.tick(60)
 
-        # После завершения игрового цикла останавливаем все звуки
         pygame.mixer.music.stop()
         pygame.mixer.stop()
         self.show_statistics()
