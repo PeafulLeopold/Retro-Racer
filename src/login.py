@@ -1,7 +1,6 @@
 import pygame
 import sys
 from colors import BLACK, GREEN, WHITE
-from game import Game
 
 class Login:
     def __init__(self):

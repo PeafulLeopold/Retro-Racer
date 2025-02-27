@@ -16,15 +16,11 @@ class Garage:
         self.font = pygame.font.Font(None, 36)
         self.title_font = pygame.font.Font(None, 60)
 
-        self.selected_index = 0  # Индекс выбранного автомобиля
+        self.selected_index = 0
         self.cars = self.load_cars()
         self.running = True
 
     def load_cars(self):
-        """
-        Загружает список всех автомобилей и отмечает, какие из них уже куплены пользователем.
-        Если файл изображения отсутствует, подставляется дефолтное изображение.
-        """
         all_cars = get_cars()
         owned_ids = [car[0] for car in get_owned_cars(self.user_id)]
         
@@ -56,22 +52,18 @@ class Garage:
 
     def draw_garage(self):
         self.screen.fill(BLACK)
-        # Заголовок
         title_surface = self.title_font.render("Гараж", True, WHITE)
         self.screen.blit(title_surface, (self.width // 2 - title_surface.get_width() // 2, 20))
 
-        # Если список автомобилей пуст, выводим сообщение
         if not self.cars:
             self.draw_text("Нет автомобилей для отображения", self.width // 2 - 200, self.height // 2, WHITE)
             return
 
-        # Если выбранный индекс выходит за пределы, сбрасываем его
         if self.selected_index >= len(self.cars):
             self.selected_index = 0
 
         selected_car = self.cars[self.selected_index]
 
-        # Левая панель (информация о машине)
         panel_width = 300
         panel_height = 600
         panel_x = 50
@@ -96,14 +88,12 @@ class Garage:
             text_surface = self.font.render(line, True, WHITE)
             self.screen.blit(text_surface, (panel_x + 20, panel_y + 20 + i * 40))
 
-        # Правая панель (изображение автомобиля)
         image_panel_x = panel_x + panel_width + 50
         image_panel_y = panel_y
         image_panel_width = self.width - image_panel_x - 50
         image_panel_height = panel_height
         pygame.draw.rect(self.screen, WHITE, (image_panel_x, image_panel_y, image_panel_width, image_panel_height), 2)
 
-        # Масштабирование изображения с сохранением пропорций
         car_image = selected_car['image']
         img_rect = car_image.get_rect()
         scale_factor = min(image_panel_width / img_rect.width, image_panel_height / img_rect.height)
@@ -114,7 +104,6 @@ class Garage:
         img_y = image_panel_y + (image_panel_height - new_height) // 2
         self.screen.blit(scaled_image, (img_x, img_y))
 
-        # Инструкции по навигации
         nav_text = "← Предыдущая  |  → Следующая  |  ESC Выйти"
         nav_surface = self.font.render(nav_text, True, WHITE)
         self.screen.blit(nav_surface, (self.width // 2 - nav_surface.get_width() // 2, self.height - 50))

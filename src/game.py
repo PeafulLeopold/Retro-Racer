@@ -16,7 +16,7 @@ class Bonus:
     def __init__(self, bonus_type, image_path, speed, lane_center):
         self.bonus_type = bonus_type  # "coin" или "heart"
         self.image = pygame.image.load(image_path).convert_alpha()
-        self.image.set_colorkey(WHITE
+        self.image.set_colorkey(WHITE)
         self.image = pygame.transform.scale(self.image, (70, 70))
         self.mask = pygame.mask.from_surface(self.image)
         self.speed = speed

@@ -17,10 +17,10 @@ class Registration:
         self.GRAY = (200, 200, 200)
         self.LIGHT_GRAY = (150, 150, 150)  
         self.ACT_COLOR = (0, 255, 0)
-        self.ERROR_COLOR = (255, 0, 0)  # Цвет для ошибок
+        self.ERROR_COLOR = (255, 0, 0)
 
         self.font = pygame.font.Font(None, 60)
-        self.title_font = pygame.font.Font(None, 80)  # Шрифт для заголовка
+        self.title_font = pygame.font.Font(None, 80)
 
         self.name_input_rect = pygame.Rect(170, 200, 500, 70)
         self.password_input_rect = pygame.Rect(170, 350, 500, 70)
@@ -235,7 +235,6 @@ class Registration:
             conn.close()
             
 
-            # Для себя
             print("Пользователь успешно добавлен!")
 
         pygame.display.flip()

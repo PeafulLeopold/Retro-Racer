@@ -4,7 +4,7 @@ import os
 
 class Leaderboard:
     def __init__(self):
-        pygame.init()  # Инициализация pygame
+        pygame.init()
         self.width, self.height = 800, 800
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.font = pygame.font.Font(None, 36)
@@ -20,7 +20,6 @@ class Leaderboard:
         db_path = os.path.join('db', 'project_database.db')
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Сортируем по рекорду (DESC), а при равенстве — по имени (ASC)
         cursor.execute('SELECT username, high_score FROM Users ORDER BY high_score DESC, username ASC LIMIT 10')
         leaderboard = cursor.fetchall()
         conn.close()
@@ -35,7 +34,6 @@ class Leaderboard:
 
     def draw(self):
         self.screen.fill(self.colors["background"])
-        # Центрируем заголовок по ширине окна
         title = "Таблица лидеров"
         self.draw_text(title, self.width // 2, 30, self.colors["primary"], 48, center=True)
 

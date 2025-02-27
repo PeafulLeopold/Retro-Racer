@@ -10,8 +10,7 @@ def init_db():
     
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
-    # Создание таблицы Users с сохранением баланса и рекордов
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,8 +20,7 @@ def init_db():
             high_score INTEGER DEFAULT 0
         )
     ''')
-    
-    # Таблица Cars: информация о машинах для покупки и использования
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Cars (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,8 +31,7 @@ def init_db():
             image_path TEXT NOT NULL
         )
     ''')
-    
-    # Таблица OwnedCars: связывает пользователей с купленными машинами
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS OwnedCars (
             user_id INTEGER NOT NULL,
@@ -66,14 +63,10 @@ def create_user(username, password):
         conn.close()
         return None
     user_id = cursor.lastrowid
-
-    # Определяем путь до дефолтной машины
     default_image_path = r"data\images\car.png"
-    # Проверяем, существует ли машина с таким изображением
     cursor.execute('SELECT id FROM Cars WHERE image_path = ?', (default_image_path,))
     result = cursor.fetchone()
     if result is None:
-        # Если нет, создаем дефолтную машину с базовыми характеристиками
         cursor.execute('''
             INSERT INTO Cars (name, speed, acceleration, price, image_path)
             VALUES (?, ?, ?, ?, ?)
@@ -128,7 +121,6 @@ def update_high_score(user_id, new_score):
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    # Получаем текущий рекорд пользователя
     cursor.execute('SELECT high_score FROM Users WHERE id = ?', (user_id,))
     current_high = cursor.fetchone()[0]
     if new_score > current_high:
@@ -152,7 +144,6 @@ def get_cars():
     cursor.execute('SELECT * FROM Cars')
     cars = cursor.fetchall()
     if not cars:
-        # Добавляем начальные записи (убедитесь, что файлы изображений существуют по указанным путям)
         default_cars = [
             ("Speedster", 220, 3.5, 50, "data/images/car.jpg"),
         ]

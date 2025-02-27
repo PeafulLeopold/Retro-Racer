@@ -14,18 +14,15 @@ class Settings:
         }
         self.running = True
 
-        # Громкость музыки и звуков (от 0.0 до 1.0)
-        self.music_volume = 0.5  # По умолчанию 50%
+        self.music_volume = 0.5
 
-        # Позиции ползунков
-        self.music_slider_x = 400  # Начальная позиция ползунка музыки
-        self.slider_y = 200        # Y-позиция ползунков
-        self.slider_width = 200    # Ширина ползунка
-        self.slider_height = 10    # Высота ползунка
-        self.handle_radius = 10    # Радиус ручки ползунка
+        self.music_slider_x = 400
+        self.slider_y = 200
+        self.slider_width = 200
+        self.slider_height = 10
+        self.handle_radius = 10
 
-        # Схема управления (по умолчанию стрелочки)
-        self.control_scheme = "arrows"  # "arrows" или "wasd"
+        self.control_scheme = "arrows"
 
     def draw_text(self, text, x, y, color, size=24):
         font = pygame.font.Font(None, size)
@@ -33,21 +30,17 @@ class Settings:
         self.screen.blit(text_surface, (x, y))
 
     def draw_slider(self, x, y, width, height, handle_x, color):
-        # Отрисовка полосы ползунка
         pygame.draw.rect(self.screen, color, (x, y, width, height))
-        # Отрисовка ручки ползунка
         pygame.draw.circle(self.screen, color, (handle_x, y + height // 2), self.handle_radius)
 
     def draw(self):
         self.screen.fill(self.colors["background"])
         self.draw_text("Настройки", self.width // 2 - 50, 30, self.colors["primary"], 48)
         
-        # Громкость музыки
         self.draw_text("Громкость музыки", 50, 150, self.colors["primary"], 36)
         self.draw_slider(300, 170, self.slider_width, self.slider_height, self.music_slider_x, self.colors["accent"])
         self.draw_text(f"{int(self.music_volume * 100)}%", 520, 150, self.colors["primary"], 36)
         
-        # Управление
         self.draw_text("Управление", 50, 350, self.colors["primary"], 36)
         control_text = "Стрелочки" if self.control_scheme == "arrows" else "WASD"
         self.draw_text(f"Текущее управление: {control_text}", 50, 400, self.colors["primary"], 36)
@@ -61,24 +54,22 @@ class Settings:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                elif event.key == pygame.K_c:  # Переключение схемы управления
+                elif event.key == pygame.K_c:
                     self.control_scheme = "wasd" if self.control_scheme == "arrows" else "arrows"
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Левая кнопка мыши
+                if event.button == 1:
                     self.handle_slider_click(event.pos)
 
     def handle_slider_click(self, mouse_pos):
         x, y = mouse_pos
-        # Проверка клика на ползунке музыки
         if 170 <= y <= 170 + self.slider_height:
             if 300 <= x <= 300 + self.slider_width:
                 self.music_slider_x = x
                 self.music_volume = (x - 300) / self.slider_width
-                # Применение громкости музыки
                 pygame.mixer.music.set_volume(self.music_volume)
 
     def run(self):
-        self.running = True  # Добавлено: сброс состояния цикла
+        self.running = True
         clock = pygame.time.Clock()
         
         while self.running:

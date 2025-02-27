@@ -6,14 +6,13 @@ class Car:
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=(x, y))
         self.speed = speed
-        self.move_bounds = pygame.Rect(0, 0, 0, 0)  # Инициализация границ
-        self.control_scheme = control_scheme  # Схема управления
+        self.move_bounds = pygame.Rect(0, 0, 0, 0)
+        self.control_scheme = control_scheme
 
     def set_move_bounds(self, road_rect):
         self.move_bounds = road_rect.inflate(100, 100)
 
     def update(self, keys):
-        # Движение в зависимости от схемы управления
         if self.control_scheme == "arrows":
             if keys[pygame.K_UP]: 
                 self.rect.y -= self.speed
