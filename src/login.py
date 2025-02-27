@@ -50,4 +50,7 @@ class Login:
                             return "register"
                         if login_button.collidepoint(event.pos):
                             return "log_in"
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
             pygame.display.flip()

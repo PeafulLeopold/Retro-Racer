@@ -78,9 +78,11 @@ class Settings:
                 pygame.mixer.music.set_volume(self.music_volume)
 
     def run(self):
+        self.running = True  # Добавлено: сброс состояния цикла
         clock = pygame.time.Clock()
+        
         while self.running:
-            self.handle_events()  # Обработка событий
-            self.draw()          # Отрисовка
+            self.handle_events()
+            self.draw()
             pygame.display.flip()
             clock.tick(60)
